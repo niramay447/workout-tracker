@@ -1,7 +1,7 @@
 import requests
 
-APP_ID = "aa5a07ea"
-API_KEY = "a7121f40d7ffb50b124285f49488b1fc"
+APP_ID = "API_ID_HERE"
+API_KEY = "API_KEY_HERE"
 
 GENDER = "Male"
 WEIGHT_KG = "65"
@@ -25,3 +25,6 @@ parameters = {
     "age": AGE
 }
 
+response = requests.post(exercise_endpoint,json=parameters,headers=headers)
+result = response.json()
+print(result)
