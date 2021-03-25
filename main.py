@@ -1,14 +1,16 @@
 import requests
+from datetime import datetime
 
 APP_ID = "API_ID_HERE"
 API_KEY = "API_KEY_HERE"
 
 GENDER = "Male"
-WEIGHT_KG = "65"
-HEIGHT_CM = "170"
-AGE = "25"
+WEIGHT_KG = 65
+HEIGHT_CM = 170
+AGE = 25
 
-exercise_endpoint = "https://trackapi.nutritionix.com/v2/natural/exercise"
+exercise_endpoint = "EXERCISE_ENDPOINT_HERE"
+sheet_endpoint = "SHEET_ENDPOINT_HERE"
 
 exercise_text = input("What exercises did you do?:")
 
@@ -27,4 +29,22 @@ parameters = {
 
 response = requests.post(exercise_endpoint,json=parameters,headers=headers)
 result = response.json()
-print(result)
+
+
+today_date = datetime.now().strftime("%d/%m/%Y")
+now_time = datetime.now().strftime("%X")
+
+for exercise in result["exercises"]:
+    sheet_inputs = {
+        "workout": {
+            "date": today_date,
+            "time": now_time,
+            "exercise": exercise["name"].title(),
+            "duration": exercise["duration_min"],
+            "calories": exercise["nf_calories"]
+        }
+    }
+
+    sheet_response = requests.post(sheet_endpoint, json=sheet_inputs)
+
+    print(sheet_response.text)
